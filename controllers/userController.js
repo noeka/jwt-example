@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports = {
 
-  create: (req, res, next) => {
+  signup: (req, res, next) => {
     User.count({ email: req.body.email }, (err, count) => {
       if (count > 0) {
         res.status(409).json({ error: "Email already exists!" });
@@ -32,6 +32,31 @@ module.exports = {
         });
       }
     })
+  },
+
+  signin: (req, res, next) => {
+    User.findOne({ email: req.body.email }, (err, user) => {
+      if (!user) {
+        res.status(401).json({ error: "Unauthorized" });
+      } else {
+        bcrypt.compare(req.body.password, user.password, function(err, result) {
+          if(result) {
+            token = jwt.sign({ user: user.id }, config.Salt, { expiresIn: '1h' });
+
+            res.status(201).json({
+              message: "User " + user.username + " logged in!", 
+              user: { 
+                username: user.username, 
+                email: user.email,
+                token: token
+              } 
+            })
+          } else {
+            res.status(401).json({ error: "Unauthorized" });
+          } 
+        });
+      }
+    });
   }
 
 }
