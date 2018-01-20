@@ -1,0 +1,4 @@
+{
+    "DBHost": "mongodb://localhost/jwt-test_test",
+    "Salt": "Salt"
+}
