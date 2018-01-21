@@ -30,6 +30,17 @@ describe('AUTHENTICATION', () => {
           done();
         });
     });
+    it('Should fail if email is incorrect', (done) => {
+      chai.request(app)
+        .post('/auth/signup')
+        .send({ username: 'johndoe', email: 'hashshash.com', password: 'lolololo' })
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a('object');
+          res.body.should.have.property('error').eql('The entered email is not valid!');
+          done();
+        });
+    });
   });
 
   describe('POST /auth/signin', () => {
