@@ -18,7 +18,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const users = require('./routes/users');
+const pages = require('./routes/pages');
 
 app.use('/auth', users);
+app.use('/', pages);
 
 module.exports = app;
